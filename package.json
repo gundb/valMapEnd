@@ -1,0 +1,20 @@
+{
+  "name": "val-map-end",
+  "version": "0.1.0",
+  "description": "Map over each node and call a function when finished",
+  "main": "index.js",
+  "scripts": {
+    "test": "jasmine"
+  },
+  "keywords": [
+    "gun"
+  ],
+  "author": "Jesse Gibson <jesse@gundb.io> (http://techllama.com)",
+  "license": "MIT",
+  "dependencies": {
+    "gun": "^0.2.5"
+  },
+  "devDependencies": {
+    "jasmine": "^2.4.1"
+  }
+}

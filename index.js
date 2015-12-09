@@ -16,16 +16,28 @@ module.exports = Gun = require('gun/gun');
 
 
 Gun.chain.valMapEnd = function (cb, end) {
-	var n, gun = this;
-	n = function () {};
+	var n = function () {},
+		count = 0,
+		props = [],
+		gun = this;
 	cb = cb || n;
 	end = end || n;
-	
+
 	gun.val(function (list) {
-		Gun.is.node(list, function (node, prop) {
-			gun.path(prop).val(cb);
+		var args = Array.prototype.slice.call(arguments);
+		Gun.is.node(list, function (n, prop) {
+			count += 1;
+			props.push(prop);
 		});
-		end();
+		props.forEach(function (prop) {
+			gun.path(prop).val(function (val, key) {
+				count -= 1;
+				cb.apply(this, arguments);
+				if (!count) {
+					end.apply(this, args);
+				}
+			});
+		});
 	});
 	return gun;
 };

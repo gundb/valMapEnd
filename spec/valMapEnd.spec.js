@@ -9,6 +9,7 @@ describe('ValMapEnd', function () {
 	jasmine.DEFAULT_TIMEOUT_INTERVAL = 500;
 
 	var gun;
+
 	function setup(done) {
 		gun = new Gun().get('test').set();
 		gun.set({
@@ -61,8 +62,48 @@ describe('ValMapEnd', function () {
 		gun.valMapEnd(function () {}, done);
 	});
 
+	it('should send the first-level node into end', function (done) {
+		gun.valMapEnd(null, function (val) {
+			expect(val).toEqual(jasmine.any(Object));
+			done();
+		});
+	});
+
 	it('should guard against non-function input', function () {
 		var valMapEnd = gun.valMapEnd.bind(gun, null, NaN);
 		expect(valMapEnd).not.toThrow();
+	});
+
+	it('should only call done when every val has fulfilled', function (done) {
+		var flag;
+		gun.valMapEnd(function () {
+			flag = true;
+		}, function () {
+			expect(flag).toBe(true);
+			done();
+		});
+	});
+
+	it('should preserve "this" value in the "val" callback', function (done) {
+		gun.valMapEnd(function () {
+			var isGun = Gun.is(this);
+			expect(isGun).toBe(true);
+			done();
+		});
+	});
+
+	it('should pass the key to the "end" callback', function (done) {
+		gun.valMapEnd(null, function (val, key) {
+			expect(key).toEqual(jasmine.any(String));
+			done();
+		});
+	});
+
+	it('should preserve "this" value in the "end" callback', function (done) {
+		gun.valMapEnd(null, function () {
+			var isGun = Gun.is(this);
+			expect(isGun).toBe(true);
+			done();
+		});
 	});
 });

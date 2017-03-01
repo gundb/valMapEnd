@@ -25,7 +25,7 @@ Gun.chain.valMapEnd = function (cb, end) {
 
 	gun.val(function (list) {
 		var args = Array.prototype.slice.call(arguments);
-		Gun.is.node(list, function (n, prop) {
+		Gun.node.is(list, function (n, prop) {
 			count += 1;
 			props.push(prop);
 		});
